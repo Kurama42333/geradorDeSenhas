@@ -114,3 +114,10 @@ body {
 .hide {
     display: none;
 }
+
+.copy-instruction {
+    color: #14d1c1;
+    font-size: 16px;
+    margin-top: 10px;
+    opacity: 0.8;
+}

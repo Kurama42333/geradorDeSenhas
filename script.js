@@ -1,28 +1,51 @@
 let sliderElement = document.querySelector("#slider");
 let buttonElement = document.querySelector("#button");
-let sizePassword = document.querySelector("#Valor");
-let password = document.querySelector("#password");
+let passwordElement = document.querySelector("#password");
 let containerPassword = document.querySelector("#container-password");
-
-let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+let valor = document.querySelector("#Valor");
+let copyInstruction = document.querySelector("#copy-instruction");
 
 sliderElement.oninput = function() {
-    sizePassword.innerHTML = this.value;
+    valor.textContent = this.value;
 }
 
 function generatePassword() {
-    let pass = "";
-    for(let i = 0, n = charset.length; i < sliderElement.value; ++i) {
-        pass += charset.charAt(Math.floor(Math.random() * n));
+    let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+    let password = "";
+    let passwordLength = sliderElement.value;
+
+    for(let i = 0; i < passwordLength; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
     }
-    
+
     containerPassword.classList.remove("hide");
-    password.innerHTML = pass;
+    passwordElement.textContent = password;
 }
 
 buttonElement.addEventListener("click", generatePassword);
 
-password.addEventListener("click", () => {
-    navigator.clipboard.writeText(password.innerHTML);
-    alert("Senha copiada com sucesso!");
+passwordElement.addEventListener("click", function() {
+    navigator.clipboard.writeText(passwordElement.textContent);
+    copyInstruction.innerHTML = "Senha copiada com sucesso! 👍";
+});
+
+// ... existing code ...
+
+passwordElement.addEventListener("click", function() {
+    navigator.clipboard.writeText(passwordElement.textContent);
+    passwordElement.textContent = "";
+    
+    let timeLeft = 10;
+    
+    // Atualiza o contador a cada segundo
+    const countdownInterval = setInterval(() => {
+        copyInstruction.innerHTML = `Autodestruição em ${timeLeft}`;
+        timeLeft--;
+        
+        if (timeLeft < 0) {
+            clearInterval(countdownInterval);
+            copyInstruction.innerHTML = "Clique na senha para copiar 👆";
+            containerPassword.classList.add("hide");
+        }
+    }, 1000);
 });
